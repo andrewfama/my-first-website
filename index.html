@@ -1,123 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <!-- 1. Tell the browser we’re using HTML5 and set character encoding -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Line Reader for Rehearsal</title>
 
-    <!-- 2. Quick CSS to make it look decent -->
-    <style>
-      body {
-        font-family: sans-serif;
-        max-width: 600px;
-        margin: 2em auto;
-        line-height: 1.5;
-        padding: 0 1em;
-      }
-      textarea {
-        width: 100%;
-        height: 150px;
-        font-family: monospace;
-        margin-bottom: 0.5em;
-      }
-      #lineDisplay {
-        border: 1px solid #ccc;
-        padding: 1em;
-        min-height: 3em;
-        margin: 0.5em 0;
-        background: #f9f9f9;
-      }
-      button {
-        padding: 0.5em 1em;
-        margin-right: 0.5em;
-      }
-      button:disabled {
-        opacity: 0.5;
-      }
-    </style>
+    <!-- link out to our CSS file -->
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <h1>Line Reader</h1>
     <p>
-      Paste your script below (one line per entry), then click “Load Script.”
-      Use “Prev” and “Next” to navigate.
+      Paste your script (one line per entry), click “Load Script,” then use ←/→
+      or the buttons to navigate.
     </p>
 
-    <!-- 3. Where you’ll paste your script -->
     <textarea
       id="scriptInput"
-      placeholder="Example:&#10;LEO: Hello there.&#10;LUNA: Hi, Leo."
+      placeholder="LEO: Hello there.&#10;LUNA: Hi, Leo."
     ></textarea>
     <br />
 
-    <!-- 4. Load the textarea into our JavaScript -->
     <button id="loadScript">Load Script</button>
+    <div id="lineDisplay" aria-live="polite">No script loaded.</div>
+    <div class="controls">
+      <button id="prevLine" disabled aria-label="Previous line">← Prev</button>
+      <button id="nextLine" disabled aria-label="Next line">Next →</button>
+    </div>
 
-    <!-- 5. Area where one line is shown at a time -->
-    <div id="lineDisplay">No script loaded.</div>
-
-    <!-- 6. Navigation buttons -->
-    <button id="prevLine" disabled>← Prev</button>
-    <button id="nextLine" disabled>Next →</button>
-
-    <!-- 7. Our JavaScript goes at the bottom -->
-    <script>
-      // Get references to all the elements we’ll use
-      const textarea   = document.getElementById('scriptInput');
-      const loadBtn    = document.getElementById('loadScript');
-      const displayDiv = document.getElementById('lineDisplay');
-      const prevBtn    = document.getElementById('prevLine');
-      const nextBtn    = document.getElementById('nextLine');
-
-      // State: array of lines & current index
-      let lines = [];
-      let currentIndex = 0;
-
-      // Helper: show the current line and update button states
-      function showLine() {
-        if (lines.length === 0) {
-          displayDiv.textContent = 'No script loaded.';
-          prevBtn.disabled = nextBtn.disabled = true;
-          return;
-        }
-        // Display "1/10: LEO: Hello"
-        displayDiv.textContent = \`\${currentIndex + 1}/\${lines.length}: \${lines[currentIndex]}\`;
-
-        // Disable prev if at start, disable next if at end
-        prevBtn.disabled = currentIndex === 0;
-        nextBtn.disabled = currentIndex === lines.length - 1;
-      }
-
-      // When the user clicks "Load Script"
-      loadBtn.addEventListener('click', () => {
-        // 1. Split text by newlines, trim empty lines
-        lines = textarea.value
-          .split('\\n')
-          .map(line => line.trim())
-          .filter(line => line.length > 0);
-
-        currentIndex = 0;
-        showLine();
-      });
-
-      // Prev button: go back one line
-      prevBtn.addEventListener('click', () => {
-        if (currentIndex > 0) {
-          currentIndex--;
-          showLine();
-        }
-      });
-
-      // Next button: go forward one line
-      nextBtn.addEventListener('click', () => {
-        if (currentIndex < lines.length - 1) {
-          currentIndex++;
-          showLine();
-        }
-      });
-
-      // Tip: you can open your browser console (F12) to see errors or add console.log(...) calls while debugging
-    </script>
+    <!-- link out to our JS file -->
+    <script src="script.js"></script>
   </body>
 </html>
