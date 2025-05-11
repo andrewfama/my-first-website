@@ -1,253 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <!-- 1. Tell the browser we’re using HTML5 and set character encoding -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Serenity in Nature</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap"
-      rel="stylesheet"
-    />
+    <title>Line Reader for Rehearsal</title>
+
+    <!-- 2. Quick CSS to make it look decent -->
     <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
       body {
-        font-family: "Montserrat", sans-serif;
-        color: #fff;
-        overflow-x: hidden;
-      }
-      .hero {
-        height: 100vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        background: linear-gradient(135deg, #a8e063 0%, #56ab2f 100%);
-      }
-      .hero h1 {
-        font-size: 4rem;
-        margin-bottom: 0.5em;
-      }
-      .hero p {
-        font-size: 1.5rem;
-        opacity: 0.8;
-      }
-
-      .section {
-        padding: 80px 20px;
-        text-align: center;
-      }
-      .forest {
-        background: linear-gradient(135deg, #134e5e 0%, #71b280 100%);
-      }
-      .ocean {
-        background: linear-gradient(135deg, #2b5876 0%, #4e4376 100%);
-      }
-      .mountains {
-        background: linear-gradient(135deg, #654ea3 0%, #eaafc8 100%);
-      }
-
-      .section h2 {
-        font-size: 2.5rem;
-        margin-bottom: 0.5em;
-      }
-      .section p {
-        font-size: 1.1rem;
+        font-family: sans-serif;
         max-width: 600px;
-        margin: 0 auto 1.5em;
-        line-height: 1.6;
+        margin: 2em auto;
+        line-height: 1.5;
+        padding: 0 1em;
       }
-      .section img {
-        max-width: 100%;
-        height: auto;
-        border-radius: 12px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      textarea {
+        width: 100%;
+        height: 150px;
+        font-family: monospace;
+        margin-bottom: 0.5em;
       }
-
-      /* Banana styling */
-      #banana-man {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 150px;
-        pointer-events: none;
-        z-index: 10;
+      #lineDisplay {
+        border: 1px solid #ccc;
+        padding: 1em;
+        min-height: 3em;
+        margin: 0.5em 0;
+        background: #f9f9f9;
       }
-
-      /* Hide audio controls */
-      audio {
-        display: none;
+      button {
+        padding: 0.5em 1em;
+        margin-right: 0.5em;
+      }
+      button:disabled {
+        opacity: 0.5;
       }
     </style>
   </head>
   <body>
-    <div class="hero">
-      <h1 class="hero-title">Find Your Serenity</h1>
-      <p class="hero-subtitle">Where nature meets relaxation.</p>
-    </div>
+    <h1>Line Reader</h1>
+    <p>
+      Paste your script below (one line per entry), then click “Load Script.”
+      Use “Prev” and “Next” to navigate.
+    </p>
 
-    <section class="section forest">
-      <h2 class="forest-title">Forest Whisper</h2>
-      <p class="forest-text">
-        Breathe in the scent of pine and moss as you wander among ancient trees.
-      </p>
-      <img
-        class="forest-img"
-        src="https://picsum.photos/id/1020/800/500"
-        alt="Forest Path"
-      />
-    </section>
+    <!-- 3. Where you’ll paste your script -->
+    <textarea
+      id="scriptInput"
+      placeholder="Example:&#10;LEO: Hello there.&#10;LUNA: Hi, Leo."
+    ></textarea>
+    <br />
 
-    <section class="section ocean">
-      <h2 class="ocean-title">Ocean Breeze</h2>
-      <p class="ocean-text">
-        Feel the cool mist and listen to the gentle waves lapping the shore.
-      </p>
-      <img
-        class="ocean-img"
-        src="https://picsum.photos/id/1011/800/500"
-        alt="Ocean View"
-      />
-    </section>
+    <!-- 4. Load the textarea into our JavaScript -->
+    <button id="loadScript">Load Script</button>
 
-    <section class="section mountains">
-      <h2 class="mountains-title">Mountain Peaks</h2>
-      <p class="mountains-text">
-        Find peace in the stillness above the clouds and take in panoramic
-        vistas.
-      </p>
-      <img
-        class="mountains-img"
-        src="https://picsum.photos/id/1003/800/500"
-        alt="Mountain Range"
-      />
-    </section>
+    <!-- 5. Area where one line is shown at a time -->
+    <div id="lineDisplay">No script loaded.</div>
 
-    <!-- Jumping Banana -->
-    <img
-      id="banana-man"
-      src="https://cdn.pixabay.com/photo/2013/07/12/18/11/banana-152118_1280.png"
-      alt="Banana"
-    />
+    <!-- 6. Navigation buttons -->
+    <button id="prevLine" disabled>← Prev</button>
+    <button id="nextLine" disabled>Next →</button>
 
-    <!-- Nature Soundscapes (CC0 from Pixabay) -->
-    <audio id="forest-audio" loop>
-      <source
-        src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_3cf879664b.mp3?filename=forest-ambient-4647.mp3"
-        type="audio/mpeg"
-      />
-    </audio>
-    <audio id="ocean-audio" loop>
-      <source
-        src="https://cdn.pixabay.com/download/audio/2021/09/08/audio_8eca30c1ac.mp3?filename=ocean-waves-112677.mp3"
-        type="audio/mpeg"
-      />
-    </audio>
-    <audio id="mountains-audio" loop>
-      <source
-        src="https://cdn.pixabay.com/download/audio/2021/08/04/audio_df68b858e9.mp3?filename=wind-in-the-trees-4986.mp3"
-        type="audio/mpeg"
-      />
-    </audio>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/ScrollTrigger.min.js"></script>
+    <!-- 7. Our JavaScript goes at the bottom -->
     <script>
-      gsap.registerPlugin(ScrollTrigger);
+      // Get references to all the elements we’ll use
+      const textarea   = document.getElementById('scriptInput');
+      const loadBtn    = document.getElementById('loadScript');
+      const displayDiv = document.getElementById('lineDisplay');
+      const prevBtn    = document.getElementById('prevLine');
+      const nextBtn    = document.getElementById('nextLine');
 
-      // Hero animations
-      gsap.from(".hero-title", {
-        y: 50,
-        opacity: 0,
-        duration: 1,
-        ease: "power2.out",
-      });
-      gsap.from(".hero-subtitle", {
-        y: 50,
-        opacity: 0,
-        duration: 1,
-        delay: 0.3,
-        ease: "power2.out",
-      });
+      // State: array of lines & current index
+      let lines = [];
+      let currentIndex = 0;
 
-      // Section fade-ins on scroll
-      document.querySelectorAll(".section").forEach((section) => {
-        gsap.from(section.querySelector("h2"), {
-          scrollTrigger: { trigger: section, start: "top 80%" },
-          y: 30,
-          opacity: 0,
-          duration: 0.8,
-          ease: "power2.out",
-        });
-        gsap.from(section.querySelector("p"), {
-          scrollTrigger: { trigger: section, start: "top 80%" },
-          y: 30,
-          opacity: 0,
-          duration: 0.8,
-          delay: 0.2,
-          ease: "power2.out",
-        });
-        gsap.from(section.querySelector("img"), {
-          scrollTrigger: { trigger: section, start: "top 80%" },
-          scale: 0.9,
-          opacity: 0,
-          duration: 1,
-          delay: 0.4,
-          ease: "power2.out",
-        });
-      });
+      // Helper: show the current line and update button states
+      function showLine() {
+        if (lines.length === 0) {
+          displayDiv.textContent = 'No script loaded.';
+          prevBtn.disabled = nextBtn.disabled = true;
+          return;
+        }
+        // Display "1/10: LEO: Hello"
+        displayDiv.textContent = \`\${currentIndex + 1}/\${lines.length}: \${lines[currentIndex]}\`;
 
-      // Banana bounce
-      gsap.to("#banana-man", {
-        y: -100,
-        repeat: -1,
-        yoyo: true,
-        ease: "bounce.out",
-        duration: 0.5,
-      });
-
-      // Soundscape control
-      const forestAudio = document.getElementById("forest-audio");
-      const oceanAudio = document.getElementById("ocean-audio");
-      const mountainsAudio = document.getElementById("mountains-audio");
-
-      function playAudio(target) {
-        [forestAudio, oceanAudio, mountainsAudio].forEach((audio) => {
-          if (audio === target) {
-            audio.currentTime = 0;
-            audio.play();
-          } else {
-            audio.pause();
-          }
-        });
+        // Disable prev if at start, disable next if at end
+        prevBtn.disabled = currentIndex === 0;
+        nextBtn.disabled = currentIndex === lines.length - 1;
       }
 
-      // Play forest by default
-      playAudio(forestAudio);
+      // When the user clicks "Load Script"
+      loadBtn.addEventListener('click', () => {
+        // 1. Split text by newlines, trim empty lines
+        lines = textarea.value
+          .split('\\n')
+          .map(line => line.trim())
+          .filter(line => line.length > 0);
 
-      // Switch audio on scroll
-      ScrollTrigger.create({
-        trigger: ".forest",
-        start: "top center",
-        onEnter: () => playAudio(forestAudio),
+        currentIndex = 0;
+        showLine();
       });
-      ScrollTrigger.create({
-        trigger: ".ocean",
-        start: "top center",
-        onEnter: () => playAudio(oceanAudio),
+
+      // Prev button: go back one line
+      prevBtn.addEventListener('click', () => {
+        if (currentIndex > 0) {
+          currentIndex--;
+          showLine();
+        }
       });
-      ScrollTrigger.create({
-        trigger: ".mountains",
-        start: "top center",
-        onEnter: () => playAudio(mountainsAudio),
+
+      // Next button: go forward one line
+      nextBtn.addEventListener('click', () => {
+        if (currentIndex < lines.length - 1) {
+          currentIndex++;
+          showLine();
+        }
       });
+
+      // Tip: you can open your browser console (F12) to see errors or add console.log(...) calls while debugging
     </script>
   </body>
 </html>
