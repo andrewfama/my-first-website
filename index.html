@@ -69,6 +69,22 @@
         border-radius: 12px;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
       }
+
+      /* Banana styling */
+      #banana-man {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 150px;
+        pointer-events: none;
+        z-index: 10;
+      }
+
+      /* Hide audio controls */
+      audio {
+        display: none;
+      }
     </style>
   </head>
   <body>
@@ -84,7 +100,7 @@
       </p>
       <img
         class="forest-img"
-        src="https://source.unsplash.com/collection/483251/800x500"
+        src="https://picsum.photos/id/1020/800/500"
         alt="Forest Path"
       />
     </section>
@@ -96,7 +112,7 @@
       </p>
       <img
         class="ocean-img"
-        src="https://source.unsplash.com/collection/827743/800x500"
+        src="https://picsum.photos/id/1011/800/500"
         alt="Ocean View"
       />
     </section>
@@ -109,10 +125,37 @@
       </p>
       <img
         class="mountains-img"
-        src="https://source.unsplash.com/collection/142104/800x500"
+        src="https://picsum.photos/id/1003/800/500"
         alt="Mountain Range"
       />
     </section>
+
+    <!-- Jumping Banana -->
+    <img
+      id="banana-man"
+      src="https://cdn.pixabay.com/photo/2013/07/12/18/11/banana-152118_1280.png"
+      alt="Banana"
+    />
+
+    <!-- Nature Soundscapes (CC0 from Pixabay) -->
+    <audio id="forest-audio" loop>
+      <source
+        src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_3cf879664b.mp3?filename=forest-ambient-4647.mp3"
+        type="audio/mpeg"
+      />
+    </audio>
+    <audio id="ocean-audio" loop>
+      <source
+        src="https://cdn.pixabay.com/download/audio/2021/09/08/audio_8eca30c1ac.mp3?filename=ocean-waves-112677.mp3"
+        type="audio/mpeg"
+      />
+    </audio>
+    <audio id="mountains-audio" loop>
+      <source
+        src="https://cdn.pixabay.com/download/audio/2021/08/04/audio_df68b858e9.mp3?filename=wind-in-the-trees-4986.mp3"
+        type="audio/mpeg"
+      />
+    </audio>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/ScrollTrigger.min.js"></script>
@@ -159,6 +202,51 @@
           delay: 0.4,
           ease: "power2.out",
         });
+      });
+
+      // Banana bounce
+      gsap.to("#banana-man", {
+        y: -100,
+        repeat: -1,
+        yoyo: true,
+        ease: "bounce.out",
+        duration: 0.5,
+      });
+
+      // Soundscape control
+      const forestAudio = document.getElementById("forest-audio");
+      const oceanAudio = document.getElementById("ocean-audio");
+      const mountainsAudio = document.getElementById("mountains-audio");
+
+      function playAudio(target) {
+        [forestAudio, oceanAudio, mountainsAudio].forEach((audio) => {
+          if (audio === target) {
+            audio.currentTime = 0;
+            audio.play();
+          } else {
+            audio.pause();
+          }
+        });
+      }
+
+      // Play forest by default
+      playAudio(forestAudio);
+
+      // Switch audio on scroll
+      ScrollTrigger.create({
+        trigger: ".forest",
+        start: "top center",
+        onEnter: () => playAudio(forestAudio),
+      });
+      ScrollTrigger.create({
+        trigger: ".ocean",
+        start: "top center",
+        onEnter: () => playAudio(oceanAudio),
+      });
+      ScrollTrigger.create({
+        trigger: ".mountains",
+        start: "top center",
+        onEnter: () => playAudio(mountainsAudio),
       });
     </script>
   </body>
