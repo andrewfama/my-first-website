@@ -1,5 +1,165 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Serenity in Nature</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Montserrat", sans-serif;
+        color: #fff;
+        overflow-x: hidden;
+      }
+      .hero {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        background: linear-gradient(135deg, #a8e063 0%, #56ab2f 100%);
+      }
+      .hero h1 {
+        font-size: 4rem;
+        margin-bottom: 0.5em;
+      }
+      .hero p {
+        font-size: 1.5rem;
+        opacity: 0.8;
+      }
+
+      .section {
+        padding: 80px 20px;
+        text-align: center;
+      }
+      .forest {
+        background: linear-gradient(135deg, #134e5e 0%, #71b280 100%);
+      }
+      .ocean {
+        background: linear-gradient(135deg, #2b5876 0%, #4e4376 100%);
+      }
+      .mountains {
+        background: linear-gradient(135deg, #654ea3 0%, #eaafc8 100%);
+      }
+
+      .section h2 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5em;
+      }
+      .section p {
+        font-size: 1.1rem;
+        max-width: 600px;
+        margin: 0 auto 1.5em;
+        line-height: 1.6;
+      }
+      .section img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      }
+    </style>
+  </head>
   <body>
-    <h1>Hello, BIG PEEEN!</h1>
+    <div class="hero">
+      <h1 class="hero-title">Find Your Serenity</h1>
+      <p class="hero-subtitle">Where nature meets relaxation.</p>
+    </div>
+
+    <section class="section forest">
+      <h2 class="forest-title">Forest Whisper</h2>
+      <p class="forest-text">
+        Breathe in the scent of pine and moss as you wander among ancient trees.
+      </p>
+      <img
+        class="forest-img"
+        src="https://source.unsplash.com/collection/483251/800x500"
+        alt="Forest Path"
+      />
+    </section>
+
+    <section class="section ocean">
+      <h2 class="ocean-title">Ocean Breeze</h2>
+      <p class="ocean-text">
+        Feel the cool mist and listen to the gentle waves lapping the shore.
+      </p>
+      <img
+        class="ocean-img"
+        src="https://source.unsplash.com/collection/827743/800x500"
+        alt="Ocean View"
+      />
+    </section>
+
+    <section class="section mountains">
+      <h2 class="mountains-title">Mountain Peaks</h2>
+      <p class="mountains-text">
+        Find peace in the stillness above the clouds and take in panoramic
+        vistas.
+      </p>
+      <img
+        class="mountains-img"
+        src="https://source.unsplash.com/collection/142104/800x500"
+        alt="Mountain Range"
+      />
+    </section>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/ScrollTrigger.min.js"></script>
+    <script>
+      gsap.registerPlugin(ScrollTrigger);
+
+      // Hero animations
+      gsap.from(".hero-title", {
+        y: 50,
+        opacity: 0,
+        duration: 1,
+        ease: "power2.out",
+      });
+      gsap.from(".hero-subtitle", {
+        y: 50,
+        opacity: 0,
+        duration: 1,
+        delay: 0.3,
+        ease: "power2.out",
+      });
+
+      // Section fade-ins on scroll
+      document.querySelectorAll(".section").forEach((section) => {
+        gsap.from(section.querySelector("h2"), {
+          scrollTrigger: { trigger: section, start: "top 80%" },
+          y: 30,
+          opacity: 0,
+          duration: 0.8,
+          ease: "power2.out",
+        });
+        gsap.from(section.querySelector("p"), {
+          scrollTrigger: { trigger: section, start: "top 80%" },
+          y: 30,
+          opacity: 0,
+          duration: 0.8,
+          delay: 0.2,
+          ease: "power2.out",
+        });
+        gsap.from(section.querySelector("img"), {
+          scrollTrigger: { trigger: section, start: "top 80%" },
+          scale: 0.9,
+          opacity: 0,
+          duration: 1,
+          delay: 0.4,
+          ease: "power2.out",
+        });
+      });
+    </script>
   </body>
 </html>
